@@ -1,6 +1,6 @@
 /*!
  * angular-translate - v2.13.1 - 2016-12-06
- * 
+ *
  * Copyright (c) 2016 The angular-translate team, Pascal Precht; Licensed MIT
  */
 (function (root, factory) {
@@ -76,7 +76,8 @@ function $translatePartialLoader() {
     if (!this.tables[lang]) {
       var self = this;
 
-      return $http(angular.extend({
+      // Merging in duplicate+parallel requests patch: https://github.com/niaher/angular-translate/commit/61b3594384a28e3cd64ddc6e07b2fa3671ee60e5
+      this.tables[lang] = $http(angular.extend({
         method : 'GET',
         url: this.parseUrl(urlTemplate, lang)
       }, $httpOptions))
@@ -96,7 +97,7 @@ function $translatePartialLoader() {
             return $q.reject(self.name);
           }
         });
-
+      return this.tables[lang];
     } else {
       return $q.when(this.tables[lang]);
     }
